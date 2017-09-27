@@ -6,6 +6,9 @@ require 'pry-byebug'
 servidores = []
 servidores_sem_salario = []
 filepath = 'data/servidores.json'
+filepath2 = 'data/servidores_sem_salario.json'
+
+
 (1..261).each do |page|
   url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=25201&Pagina=#{page}"
   raw_html = open(url).read
@@ -33,16 +36,14 @@ filepath = 'data/servidores.json'
     raw_html = open(url).read
     html = Nokogiri::HTML(raw_html)
 
-    salario = html.search(".remuneracaolinhatotalliquida .colunaValor")[0]
+    salario_b = html.search("#listagemConvenios tbody tr:nth-child(5) .colunaValor")
+
+    salario_l = html.search(".remuneracaolinhatotalliquida .colunaValor")[0]
 
     print "="
 
-    if salario
-      if cargo
-        servidores << { name: name, salary: salario.text, job: cargo.text.strip }
-      else
-        servidores << { name: name, salary: salario.text }
-      end
+    if salario_l
+      servidores << { name: name, job: cargo.text.strip, salary_b: salario_b.text, salary_l: salario_l.text  }
     else
       servidores_sem_salario << name
     end
@@ -51,16 +52,9 @@ filepath = 'data/servidores.json'
   File.open(filepath, 'wb') do |file|
     file.write(JSON.generate(servidores))
   end
-end
 
-puts
-puts "Servidores:"
-servidores.each do |servidor|
-  puts "#{servidor[:name]} - #{servidor[:salary]} - #{servidor[:job]}"
-end
+  File.open(filepath2, 'wb') do |file|
+    file.write(JSON.generate(servidores_sem_salario))
+  end
 
-puts
-puts "Servidores sem salário:"
-servidores_sem_salario.each do |servidor|
-  puts servidor
 end
