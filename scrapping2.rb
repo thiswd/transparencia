@@ -55,7 +55,7 @@ filepath2 = 'data/servidores_sem_salario2.json'
     if salario_l
       servidores << { name: name, job: cargo, salary_b: salario_b.text, salary_l: salario_l.text  }
     else
-      servidores_sem_salario << name
+      servidores_sem_salario << { name: name, job: cargo }
     end
   end
 
