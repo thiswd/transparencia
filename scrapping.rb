@@ -8,20 +8,20 @@ servidores_sem_salario = []
 filepath = 'data/servidores.json'
 filepath2 = 'data/servidores_sem_salario.json'
 
-(1536..3783).each do |page|
+(3429..3783).each do |page|
 
   print page
 
-  url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=25000&Pagina=#{page}"
+  url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=40111&Pagina=#{page}"
   raw_html = open(url).read
   html = Nokogiri::HTML(raw_html)
 
   html.search("#listagem table td:nth-child(2) a").each do |servidor|
     name = servidor.text.strip
     path = servidor.attr("href")
-    url = "http://www.portaltransparencia.gov.br/servidores/#{path}"
+    url_s = "http://www.portaltransparencia.gov.br/servidores/#{path}"
 
-    raw_html = open(url).read
+    raw_html = open(url_s).read
     html = Nokogiri::HTML(raw_html)
 
 
@@ -55,7 +55,7 @@ filepath2 = 'data/servidores_sem_salario.json'
     if salario_l
       servidores << { name: name, job: cargo, salary_b: salario_b.text, salary_l: salario_l.text  }
     else
-      servidores_sem_salario << name
+      servidores_sem_salario << { name: name, job: cargo, link: url_s }
     end
   end
 
