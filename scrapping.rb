@@ -8,7 +8,7 @@ servidores_sem_salario = []
 filepath = 'data/servidores.json'
 filepath2 = 'data/servidores_sem_salario.json'
 
-(3429..3783).each do |page|
+(1..59).each do |page|
 
   print page
 
@@ -53,7 +53,7 @@ filepath2 = 'data/servidores_sem_salario.json'
     print "="
 
     if salario_l
-      servidores << { name: name, job: cargo, salary_b: salario_b.text, salary_l: salario_l.text  }
+      servidores << { name: name, job: cargo, salary_b: salario_b.text, salary_l: salario_l.text, link: url_s  }
     else
       servidores_sem_salario << { name: name, job: cargo, link: url_s }
     end
