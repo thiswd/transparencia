@@ -9,15 +9,18 @@ def change(b,l)
   total = (l - b)/b * 100
 end
 
-orgs = %w(agu anac anvisa bc cgu cvm ebc embrapa fiocruz funai ibge mapa mcid mctic mdic mds me mec mf mi minc mj mma mme mp mre ms mt mte mtur pf pr)
+total_employees = 0
+
+orgs = %w(agu anac anp anvisa bc cgu cvm ebc embrapa fiocruz funai ibge mapa mcid mctic mdic mds me mec mf mi minc mj mma mme mp mre ms mt mte mtur pf pr)
 
 orgs.each do |org|
-  filepath = 'data/servidores_#{org}.json'
+  filepath = "data/servidores_#{org}.json"
 
   serialized_employees = File.read(filepath)
 
-  employees = JSON.parse(serialized_employees)
+  employees = JSON.parse(serialized_employees, symbolize_names: true)
 
+  total_employees += employees.size
   sum_b = 0
   sum_l = 0
   employee_count = 0
@@ -25,8 +28,8 @@ orgs.each do |org|
 
   employees.each do |employee|
 
-    salary_b = strFormat(employee['salary_b']).to_f
-    salary_l = strFormat(employee['salary_l']).to_f
+    salary_b = strFormat(employee[:salary_b]).to_f
+    salary_l = strFormat(employee[:salary_l]).to_f
 
     porcentage = change(salary_b,salary_l).round(1)
 
@@ -40,19 +43,32 @@ orgs.each do |org|
       employee_count += 1
     end
 
-    if porcentage > 50
-      porcentage_positive << { name: employee['name'], porcentage: porcentage }
+    if porcentage > 70 && porcentage < 100000
+
+      porcentage_positive << { name: employee[:name], porcentage: porcentage }
     end
   end
 
-  puts "Médias"
-  puts sum_l/employee_count
-  puts sum_b/employee_count
-  puts employee_count
-  puts employees.count
+  puts "========================================================="
+  puts "Médias - #{org.upcase}"
   puts
-  puts "Variação acima de 50%"
+  puts "Salário bruto - R$ #{(sum_b/employee_count).round(2)}"
+  puts "Salário líquido - R$ #{(sum_l/employee_count).round(2)}"
+  puts "Empregados com salário - #{employee_count}"
+  puts "Total - #{employees.count}"
+  puts "---------------------------------------------------------"
+  puts "Variação acima de 70% no #{org.upcase}"
+  puts
   porcentage_positive.each do |employee|
-    puts "#{org} - #{employee[:name]} - #{employee[:porcentage]}"
+    if employee.key?(:link)
+      puts "#{employee[:name]} - #{employee[:porcentage]}% - #{employee[:link]}"
+    else
+      puts "#{employee[:name]} - #{employee[:porcentage]}%"
+    end
   end
+  puts "========================================================="
+  puts
+
 end
+
+puts "Total de servidores: #{total_employees}"
