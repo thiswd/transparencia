@@ -11,7 +11,7 @@ end
 
 total_employees = 0
 
-orgs = %w(agu anac anp anvisa bc cgu cvm ebc embrapa fiocruz funai ibge mapa mcid mctic mdic mds me mec mf mi minc mj mma mme mp mre ms mt mte mtur pf pr)
+orgs = %w(agu anac anp anvisa bc cgu cvm ebc embrapa fiocruz funai ibge inss mapa mcid mctic mdic mds me mec mf mi minc mj mma mme mp mre ms mt mte mtur pf pr)
 
 orgs.each do |org|
   filepath = "data/servidores_#{org}.json"
@@ -49,16 +49,24 @@ orgs.each do |org|
     end
   end
 
+  filepath = "data/servidores_sem_salario_#{org}.json"
+
+  serialized_employees = File.read(filepath)
+
+  no_wage_employees = JSON.parse(serialized_employees)
+
   puts "========================================================="
   puts "Médias - #{org.upcase}"
   puts
   puts "Salário bruto - R$ #{(sum_b/employee_count).round(2)}"
   puts "Salário líquido - R$ #{(sum_l/employee_count).round(2)}"
   puts "Empregados com salário - #{employee_count}"
+  puts "Empregados sem salário - #{no_wage_employees.count}"
   puts "Total - #{employees.count}"
   puts "---------------------------------------------------------"
   puts "Variação acima de 70% no #{org.upcase}"
   puts
+
   porcentage_positive.each do |employee|
     if employee.key?(:link)
       puts "#{employee[:name]} - #{employee[:porcentage]}% - #{employee[:link]}"
