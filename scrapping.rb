@@ -8,11 +8,11 @@ servidores_sem_salario = []
 filepath = 'data/servidores.json'
 filepath2 = 'data/servidores_sem_salario.json'
 
-(1..71).each do |page|
+(542..604).each do |page|
 
   print page
 
-  url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=24204&Pagina=#{page}"
+  url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=25207&Pagina=#{page}"
   raw_html = open(url).read
   html = Nokogiri::HTML(raw_html)
 
@@ -23,7 +23,6 @@ filepath2 = 'data/servidores_sem_salario.json'
 
     raw_html = open(url_s).read
     html = Nokogiri::HTML(raw_html)
-
 
     cargo = html.search("#listagemConvenios tr td:nth-child(2)")[28]
 
