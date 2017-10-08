@@ -11,7 +11,7 @@ end
 
 total_employees = 0
 
-orgs = %w(agu anac anp anvisa bc cgu cvm ebc embrapa fiocruz funai ibge inss iphan mapa mcid mctic mdic mds me mec mf mi minc mj mma mme mp mre ms mt mte mtur pf pr)
+orgs = %w(agu anac ancine anp anvisa bc cgu cvm ebc embrapa fiocruz funai ibge inss iphan mapa mcid mctic mdic mds me mec mf mi minc mj mma mme mp mre ms mt mte mtur pf pr serpro)
 
 high_wages = []
 
