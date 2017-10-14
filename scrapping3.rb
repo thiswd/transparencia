@@ -8,7 +8,7 @@ servidores_sem_salario = []
 filepath = 'data/servidores3.json'
 filepath2 = 'data/servidores_sem_salario3.json'
 
-(1..3682).each do |page|
+(587..3682).each do |page|
 
   print page
 
