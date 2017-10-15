@@ -1,3 +1,4 @@
+# FUND. UNIVERSIDADE FEDERAL DE RONDONIA
 require 'open-uri'
 require 'nokogiri'
 require 'json'
