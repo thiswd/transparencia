@@ -5,14 +5,14 @@ require 'pry-byebug'
 
 servidores = []
 servidores_sem_salario = []
-filepath = 'data/servidores4.json'
-filepath2 = 'data/servidores_sem_salario4.json'
+filepath = 'data/servidores6.json'
+filepath2 = 'data/servidores_sem_salario6.json'
 
-(1..87).each do |page|
+(1..100).each do |page|
 
   print page
 
-  url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=26268&Pagina=#{page}"
+  url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=26285&Pagina=#{page}"
   raw_html = open(url).read
   html = Nokogiri::HTML(raw_html)
 
