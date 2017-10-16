@@ -12,7 +12,7 @@ filepath2 = 'data/servidores_sem_salario4.json'
 
   print page
 
-  url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=26422&Pagina=#{page}"
+  url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=26429&Pagina=#{page}"
   raw_html = open(url).read
   html = Nokogiri::HTML(raw_html)
 
