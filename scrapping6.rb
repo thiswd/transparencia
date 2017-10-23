@@ -8,11 +8,11 @@ servidores_sem_salario = []
 filepath = 'data/servidores6.json'
 filepath2 = 'data/servidores_sem_salario6.json'
 
-(1..30).each do |page|
+(1..727).each do |page|
 
   print page
 
-  url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=40501&Pagina=#{page}"
+  url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=30802&Pagina=#{page}"
   raw_html = open(url).read
   html = Nokogiri::HTML(raw_html)
 
