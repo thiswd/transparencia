@@ -3,12 +3,14 @@ require 'nokogiri'
 require 'json'
 require 'pry-byebug'
 
+# MF
+
 servidores = []
 servidores_sem_salario = []
 filepath = 'data/servidores.json'
 filepath2 = 'data/servidores_sem_salario.json'
 
-(1..2018).each do |page|
+(573..2018).each do |page|
 
   print page
 
