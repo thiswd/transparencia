@@ -70,6 +70,7 @@ orgs.each do |org|
   puts "#{org.upcase}"
   puts "========================================================="
 
+  File.write('servidores_sem_salario.txt', org)
 
   no_wage_employees.each do |employee|
 
