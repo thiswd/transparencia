@@ -8,7 +8,7 @@ servidores_sem_salario = []
 filepath = 'data/servidores2.json'
 filepath2 = 'data/servidores_sem_salario2.json'
 # ibge
-(1..757).each do |page|
+(484..757).each do |page|
 
   print page
 
