@@ -11,9 +11,10 @@ end
 
 total_employees = 0
 
-# orgs = %w(agu anac ancine anp anvisa bc cgu cvm ebc embrapa fiocruz funai ibge inss iphan mapa mcid mctic mdic mds me mec mf mi minc mj mma mme mp mre ms mt mte mtur pf pr serpro)
+# orgs = %w(aglo agu agu2 ana anac anatel ancine aneel anp antaq anvisa bc bc2 capes cbtu cefetmg cefetrj ceitec cgu cnen cnpq codevasf conab cp2 cprm cvm dnit dnocs dnpm dpu eb ebc ebserh embrapa embratur enap epe fab fiocruz fnde fosorio funag funai funarte funasa fundacentro fundaj furg hcpa ibama ibc ibge ibge2 ibram ifac ifal ifam ifap ifb ifba ifbaiano ifc ifce ifes iff iffarroupilha ifg ifgo ifma ifmg ifms ifmt ifnmg ifpa ifpb ifpe ifpi ifpr ifrj ifrn ifro ifrr ifrs ifsc ifse ifsertao ifsp ifsudestemg ifsul ifsuldeminas iftm ifto inep ines inmetro inpi inss ipea iphan mapa mapa2 mb mcid mctic mdic mds me mec mec2 mf mf2 mi minc minc2 mj mj2 mma mme mme2 mp mpdft mpf mpt mre ms ms2 mt mte mtur nuclep pf pf2 pr pr2 previc prf serpro sudam sudeco sudene suframa susep tst ufabc ufac ufal ufam ufba ufc ufcg ufcspa ufersa ufes uff uffs ufg ufgd ufjf ufla ufma ufmg ufms ufmt ufob ufop ufopa ufpa ufpb ufpe ufpel ufpi ufpr ufra ufrb ufrgs ufrj ufrj2 ufrn ufrpe ufrr ufrrj ufs ufsb ufsc ufscar ufsj ufsm uft uftm ufu ufv ufvjm unb unifal unifap unifei unifesp unila unilab unipampa unir univasf utfpr valec)
 
-orgs = %w(aglo agu agu2 ana anac anatel ancine aneel anp antaq anvisa bc bc2 capes cbtu cefetmg cefetrj ceitec cgu cnen cnpq codevasf conab cp2 cprm cvm dnit dnocs dnpm dpu eb ebc ebserh embrapa embratur enap epe fab fiocruz fnde fosorio funag funai funarte funasa fundacentro fundaj furg hcpa ibama ibc ibge ibge2 ibram ifac ifal ifam ifap ifb ifba ifbaiano ifc ifce ifes iff iffarroupilha ifg ifgo ifma ifmg ifms ifmt ifnmg ifpa ifpb ifpe ifpi ifpr ifrj ifrn ifro ifrr ifrs ifsc ifse ifsertao ifsp ifsudestemg ifsul ifsuldeminas iftm ifto inep ines inmetro inpi inss ipea iphan mapa mapa2 mb mcid mctic mdic mds me mec mec2 mf mf2 mi minc minc2 mj mj2 mma mme mme2 mp mpdft mpf mpt mre ms ms2 mt mte mtur nuclep pf pf2 pr pr2 previc prf serpro sudam sudeco sudene suframa susep tst ufabc ufac ufal ufam ufba ufc ufcg ufcspa ufersa ufes uff uffs ufg ufgd ufjf ufla ufma ufmg ufms ufmt ufob ufop ufopa ufpa ufpb ufpe ufpel ufpi ufpr ufra ufrb ufrgs ufrj ufrj2 ufrn ufrpe ufrr ufrrj ufs ufsb ufsc ufscar ufsj ufsm uft uftm ufu ufv ufvjm unb unifal unifap unifei unifesp unila unilab unipampa unir univasf utfpr valec)
+orgs = %w(aglo agu2 ana anac anatel ancine aneel anp antaq anvisa bc2 capes cbtu cefetmg cefetrj ceitec cgu cnen cnpq codevasf conab cp2 cprm cvm dnit dnocs dnpm dpu eb ebc ebserh embrapa embratur enap epe fab fiocruz fnde fosorio funag funai funarte funasa fundacentro fundaj furg hcpa ibama ibc ibge2 ibram ifac ifal ifam ifap ifb ifba ifbaiano ifc ifce ifes iff iffarroupilha ifg ifgo ifma ifmg ifms ifmt ifnmg ifpa ifpb ifpe ifpi ifpr ifrj ifrn ifro ifrr ifrs ifsc ifse ifsertao ifsp ifsudestemg ifsul ifsuldeminas iftm ifto inep ines inmetro inpi inss ipea iphan mapa2 mb mcid mctic mdic mds me mec2 mf2 mi minc2 mj2 mma mme mme2 mp mpdft mpf mpt mre ms2 mt mte mtur nuclep pf2 pr2 previc prf serpro sudam sudeco sudene suframa susep tst ufabc ufac ufal ufam ufba ufc ufcg ufcspa ufersa ufes uff uffs ufg ufgd ufjf ufla ufma ufmg ufms ufmt ufob ufop ufopa ufpa ufpb ufpe ufpel ufpi ufpr ufra ufrb ufrgs ufrj ufrj2 ufrn ufrpe ufrr ufrrj ufs ufsb ufsc ufscar ufsj ufsm uft uftm ufu ufv ufvjm unb unifal unifap unifei unifesp unila unilab unipampa unir univasf utfpr valec)
+
 
 high_wages = []
 
@@ -70,16 +71,13 @@ orgs.each do |org|
   puts "#{org.upcase}"
   puts "========================================================="
 
-  File.write('servidores_sem_salario.txt', org)
+  # File.write('servidores_sem_salario.txt', org)
+
+  open("data-text/#{org}.txt", "a") { |f| f << "#{org.upcase}\n\n" }
 
   no_wage_employees.each do |employee|
-
-    if employee.class == Hash
-      print "#{employee[:name]}, "
-    else
-      print "#{employee}, "
-    end
-
+    open("data-text/#{org}.txt", "a") { |f| f << "#{employee[:name]}, " }
+    print "#{employee[:name]}, "
   end
 
   puts "========================================================="
