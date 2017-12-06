@@ -7,7 +7,7 @@ servidores = []
 servidores_sem_salario = []
 filepath = 'data/servidores4.json'
 filepath2 = 'data/servidores_sem_salario4.json'
-# enap
+
 (1..16).each do |page|
 
   print page

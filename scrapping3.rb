@@ -7,7 +7,7 @@ servidores = []
 servidores_sem_salario = []
 filepath = 'data/servidores3.json'
 filepath2 = 'data/servidores_sem_salario3.json'
-# dnpm
+
 (1..74).each do |page|
 
   print page

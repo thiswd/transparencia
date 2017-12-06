@@ -7,7 +7,7 @@ servidores = []
 servidores_sem_salario = []
 filepath = 'data/servidores6.json'
 filepath2 = 'data/servidores_sem_salario6.json'
-# jbrj
+
 (1..12).each do |page|
 
   print page

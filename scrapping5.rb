@@ -7,7 +7,7 @@ servidores = []
 servidores_sem_salario = []
 filepath = 'data/servidores5.json'
 filepath2 = 'data/servidores_sem_salario5.json'
-# embratur
+
 (1..9).each do |page|
 
   print page
