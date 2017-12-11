@@ -10,12 +10,12 @@ def change(b,l)
   total = (l - b)/b * 100
 end
 
+high_wages_count = 0
+low_wages_count = 0
+no_wages_count = 0
 total_employees = 0
 
 orgs = %w(aglo agu ana anac anatel ancine aneel anp antaq anvisa bc capes cbtu cefetmg cefetrj ceitec cgu cnen cnpq codevasf conab cp2 cprm cvm dnit dnocs dnpm dpu eb ebc ebserh embrapa embratur enap epe fab fiocruz fnde fosorio funag funai funarte funasa fundacentro fundaj furg hcpa ibama ibc ibge ibram ifac ifal ifam ifap ifb ifba ifbaiano ifc ifce ifes iff iffarroupilha ifg ifgo ifma ifmg ifms ifmt ifnmg ifpa ifpb ifpe ifpi ifpr ifrj ifrn ifro ifrr ifrs ifsc ifse ifsertao ifsp ifsudestemg ifsul ifsuldeminas iftm ifto inep ines inmetro inpi inss ipea iphan mapa mb mcid mctic mdic mds me mec mf mi minc mj mma mme mp mpdft mpf mpt mre ms mt mte mtur nuclep pf pr previc prf serpro sudam sudeco sudene suframa susep tst ufabc ufac ufal ufam ufba ufc ufcg ufcspa ufersa ufes uff uffs ufg ufgd ufjf ufla ufma ufmg ufms ufmt ufob ufop ufopa ufpa ufpb ufpe ufpel ufpi ufpr ufra ufrb ufrgs ufrj ufrj2 ufrn ufrpe ufrr ufrrj ufs ufsb ufsc ufscar ufsj ufsm uft uftm ufu ufv ufvjm unb unifal unifap unifei unifesp unila unilab unipampa unir univasf utfpr valec)
-
-
-high_wages = []
 
 orgs.each do |org|
   filepath = "data/servidores_#{org}.json"
@@ -29,7 +29,10 @@ orgs.each do |org|
   sum_l = 0
   employee_count = 0
   porcentage_positive = []
+  high_wages_org = 0
   high_wages = []
+  low_wages = []
+  no_wages = []
 
   employees.each do |employee|
 
@@ -54,8 +57,20 @@ orgs.each do |org|
     #   porcentage_positive << { name: employee[:name], porcentage: porcentage, link: employee[:link] }
     # end
 
-    if salary_b > 33700
+    if salary_b >= 33763
       high_wages << employee
+      high_wages_count += 1
+      high_wages_org += 1
+    end
+
+    if salary_b < 937 && salary_b > 0
+      low_wages << employee
+      low_wages_count += 1
+    end
+
+    if salary_b == 0
+      no_wages << employee
+      no_wages_count += 1
     end
 
   end
@@ -70,13 +85,6 @@ orgs.each do |org|
 
   no_wage_employees_count = no_wage_employees.count + (employees.count - employee_count)
   total_count = employee_count + no_wage_employees_count
-
-  csv_options = { col_sep: ',', force_quotes: true, quote_char: '"' }
-
-  CSV.open("salario.csv", "w") do |csv|
-    csv << [org, employee_count, no_wage_employees_count,total_count]
-  end
-
 
   puts "========================================================="
   puts "#{org.upcase}"
@@ -122,14 +130,14 @@ orgs.each do |org|
   # puts "Maiores salários no #{org.upcase}"
   # puts
 
-  high_wages.each do |employee|
+  no_wages.each do |employee|
     puts "#{employee[:name]} - #{employee[:job]} - #{employee[:salary_b]} - #{employee[:salary_l]} - #{employee[:link]}"
   end
   puts "========================================================="
-  # puts
+  puts
 
 end
 
-  # puts high_wages.size
-  # puts
+puts no_wages_count
+# puts
 # puts "Total de servidores: #{total_employees}"

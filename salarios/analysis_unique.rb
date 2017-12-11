@@ -30,11 +30,7 @@ orgs.each do |org|
 
     salary_b = strFormat(e[:salary_b]).to_f
 
-    if salary_b > 0
-      e_group.push(e[:name])
-    else
-      e_group_no_wages.push(e[:name])
-    end
+    salary_b > 0 ? e_group.push(e[:name]) : e_group_no_wages.push(e[:name])
 
   end
 
@@ -46,25 +42,25 @@ orgs.each do |org|
 
 end
 
-File.open(filepath_all, 'wb') do |file|
-  file.write(JSON.generate(e_group))
-end
+# File.open(filepath_all, 'wb') do |file|
+#   file.write(JSON.generate(e_group))
+# end
 
 e_group_uniq = e_group.uniq { |e| e }
 
-File.open(filepath_all_uniq, 'wb') do |file|
-  file.write(JSON.generate(e_group_uniq))
-end
+# File.open(filepath_all_uniq, 'wb') do |file|
+#   file.write(JSON.generate(e_group_uniq))
+# end
 
-File.open(filepath_all_no_wages, 'wb') do |file|
-  file.write(JSON.generate(e_group_no_wages))
-end
+# File.open(filepath_all_no_wages, 'wb') do |file|
+#   file.write(JSON.generate(e_group_no_wages))
+# end
 
 e_group_no_wages_uniq = e_group_no_wages.uniq { |e| e }
 
-File.open(filepath_all_no_wages_uniq, 'wb') do |file|
-  file.write(JSON.generate(e_group_no_wages_uniq))
-end
+# File.open(filepath_all_no_wages_uniq, 'wb') do |file|
+#   file.write(JSON.generate(e_group_no_wages_uniq))
+# end
 
 total = e_group_uniq.size + e_group_no_wages_uniq.size
 rate = (e_group_no_wages_uniq.size * 100 / total).round(2)
