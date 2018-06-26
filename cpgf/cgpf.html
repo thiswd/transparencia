@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="css/style.scss">
+  <link rel="stylesheet" href="css/style.css">
   <script src="https://d3js.org/d3.v4.min.js"></script>
 
-  <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
+  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 
 </head>
 <body>
@@ -15,9 +15,201 @@
 
   </div>
 
-  <script src="js/script.js"></script>
   <script>
-    d3.text('data/cpgf_alimentacao.csv', draw)
+
+    "use strict";
+
+    function groupBy(array,func) {
+      var groups = {};
+
+      array.forEach(element => {
+        var group = JSON.stringify(func(element));
+        groups[group] = groups[group] || [];
+        groups[group].push(element);
+      });
+
+      return Object.keys(groups).map(group => {
+        return groups[group];
+      })
+    }
+
+    function formatValue(n) {
+      return Math.round(n).toLocaleString('pt-BR');
+    }
+
+    const monthNames = [
+      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho',
+      'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+
+    d3.text('data/CPGF_hospedagem_viz.csv', function(error, raw){
+      var dsv = d3.dsvFormat(';')
+      var data = dsv.parse(raw)
+
+      data.forEach(d => {
+        var dateString = d.Data;
+
+        var year = parseInt(dateString.substr(6, 4))
+        var month = parseInt(dateString.substr(3, 2))
+        var day = parseInt(dateString.substr(0, 2))
+
+        d.date = new Date(year, (month - 1), day);
+        d.day = day;
+        d.month = month;
+
+        ++d.Valor;
+      });
+
+      var data_by_month = groupBy(data, d => {
+        return d.month;
+      });
+
+      var total_by_month = data_by_month.map(array => {
+        var month = array[0].month;
+
+        var sum = array.reduce((sum, d) => {
+          return sum + d.Valor;
+        },0);
+
+        return {"month": month, "total": sum};
+      });
+
+      var total_by_year = total_by_month.reduce((total_by_year, d) => {
+        return total_by_year + d.total;
+      },0);
+
+      var margin = { top: 30, bottom: 30, left: 40, right: 30 };
+
+      var plotWidth = 700;
+      var chartHeight = 500;
+      var radius = 4;
+
+      var colors = d3.scaleOrdinal(d3.schemeCategory10);
+
+      var svgPlot = d3
+        .select('#chart')
+        .append('svg')
+        .classed('gastos', true);
+
+      var timeMax = d3.max(data_by_month[1], d => d.date);
+
+      var timeMin = d3.min(data_by_month[1], d => d.date);
+      timeMin = timeMin.setDate(timeMin.getDate() - 1);
+
+      var maxHeight = d3.max(data_by_month[1], d => d.Valor);
+
+      var timeScale = d3
+        .scaleTime()
+        .domain([timeMin, timeMax])
+        .rangeRound([0 + margin.left, plotWidth - margin.right]);
+
+      var heightScale = d3
+        .scaleLinear()
+        .domain([0, maxHeight])
+        .range([chartHeight - margin.bottom, 0 + margin.top]);
+
+      var xAxisPlot = d3
+        .axisBottom()
+        .scale(timeScale)
+        .ticks(10);
+
+      var yAxisPlot = d3.axisLeft().scale(heightScale);
+
+      svgPlot
+        .style('height', chartHeight)
+        .style('width', plotWidth);
+
+      svgPlot
+        .append('g')
+        .selectAll('circle')
+        .data(data_by_month[1])
+        .enter()
+        .append('circle')
+        .attr('cx', d => timeScale(d.date))
+        .attr('cy', d => heightScale(d.Valor))
+        .attr('r', radius)
+        .attr('fill', 'silver')
+        .attr('stroke', d => colors(d.CodOrgSuperior))
+        .attr('title', d => d.Data)
+        .style('opacity', 0.7);
+
+      svgPlot
+        .append('g')
+        .style('transform', `translateX(${margin.left}px)`)
+        .call(yAxisPlot);
+
+      svgPlot
+        .append('g')
+        .style('transform', `translate(0, ${chartHeight - margin.bottom}px)`)
+        .call(xAxisPlot);
+
+
+      // BAR CHART
+
+      var barWidth = 450;
+      var barHeight = 36;
+      var barPadding = 6;
+
+      var svgBar = d3
+        .select('#chart')
+        .append('svg')
+        .classed('meses-total', true);
+
+      var totalWidth = d3.max(total_by_month, d => d.total);
+
+      var months = d3.map(total_by_month, d => d.month);
+
+      var totalScale = d3
+        .scaleLinear()
+        .domain([0, totalWidth])
+        .range([0, barWidth - margin.right]);
+
+      var monthScale = d3
+        .scaleBand()
+        .domain(months)
+        .range([chartHeight - margin.bottom, 0 + margin.top]);
+
+      var xAxisBar = d3
+        .axisBottom()
+        .ticks(6)
+        .scale(totalScale);
+
+      var yAxisBar = d3
+        .axisLeft()
+        .scale(monthScale)
+        .tickSize(0);
+
+      svgBar
+        .style('height', chartHeight)
+        .style('width', barWidth);
+
+      svgBar
+        .append('g')
+        .selectAll('g')
+        .data(total_by_month)
+        .enter()
+        .append('g')
+        .attr('x', 0)
+        .attr('y', (d,i) => i * barHeight + margin.top + barPadding)
+        .attr('width', d => totalScale(d.total))
+        .attr('height', barHeight - barPadding)
+        .attr('fill', 'silver')
+        .style('opacity', 0.7)
+        .append('title')
+        .text(d => `R$ ${formatValue(d.total)}`);
+
+      svgBar
+        .append('g')
+        .style('transform', `translate(0, ${chartHeight - margin.bottom}px)`)
+        .call(xAxisBar);
+
+      // svgBar
+      //   .append('g')
+      //   .style('transform', `translateX(${margin.left}px)`)
+      //   .call(yAxisBar);
+
+    })
+
 
 
   </script>

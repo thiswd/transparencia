@@ -13,8 +13,7 @@ function draw(raw) {
   var margin = { top: 30, bottom: 30, left: 40, right: 30 };
   var width = 1100;
   var height = 600;
-  var radius = 5;
-  var color = 'blue';
+  var radius = 4;
 
   var svg = d3
     .select('#chart')
@@ -39,6 +38,9 @@ function draw(raw) {
 
   var yAxis = d3.axisLeft().scale(heightScale);
 
+  var brush = d3.brushX().extent(timeExtent);
+  // .on('brush', brushed);
+
   svg
     .style('height', height)
     .style('width', width)
@@ -46,7 +48,6 @@ function draw(raw) {
 
   svg
     .append('g')
-    // .style('transform', 'translateX(20px)')
     .selectAll('circle')
     .data(data)
     .enter()
@@ -54,7 +55,8 @@ function draw(raw) {
     .attr('cx', d => timeScale(d.date))
     .attr('cy', d => heightScale(d.Valor))
     .attr('r', radius)
-    .attr('fill', color)
+    .attr('fill', 'silver')
+    .attr('stroke', 'blue')
     .attr('title', d => d.Data)
     .style('opacity', 0.7);
 

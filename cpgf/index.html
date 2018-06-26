@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+
+  <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
+  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+  <script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script>
+
+</head>
+<body>
+
+  <div id="chart">
+
+
+
+  <script>
+    var svg = dimple.newSvg("#chart", 590, 400);
+
+    var scsv = d3.dsvFormat(";");
+
+    var data = console.log(scsv.parse("data/cpgf2017_filtered.csv"))
+
+    // d3.dsv("/data/cpgf2017_filtered.csv", function(data) {
+
+    //    var bubbles = new dimple.chart(svg, data);
+    //       bubbles.setBounds(60, 50, 355, 310)
+    //       bubbles.addMeasureAxis("x", "Data");
+    //       bubbles.addMeasureAxis("y", "Valor");
+    //       bubbles.addSeries(["OrgSuperior", "UnidadeGestora", "Favorecido"], dimple.plot.bubble)
+    //       bubbles.addLegend(60, 10, 410, 60);
+
+    //       // Add a storyboard to the main chart and set the tick event
+    //       // var story = bubbles.setStoryboard("Month", onTick);
+
+    //       bubbles.draw();
+
+    // });
+  </script>
+  </div>
+</body>
+</html>
