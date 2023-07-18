@@ -1,69 +1,78 @@
-require 'open-uri'
-require 'nokogiri'
-require 'json'
-require 'pry-byebug'
+require "open-uri"
+require "nokogiri"
+require "json"
 
-servidores = []
-servidores_sem_salario = []
-filepath = 'data/servidores.json'
-filepath2 = 'data/servidores_sem_salario.json'
+pages_amount = ARGV[0]
 
-(1746..2018).each do |page|
+servers = []
+wages_not_found = []
+servers_path = "data/servers.json"
+without_wages_path = "data/wages_not_found.json"
 
-  print page
+(1..pages_amount).each do |page_number|
 
-  url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=17000&Pagina=#{page}"
+  print page_number
+
+  url = "http://www.portaltransparencia.gov.br/servidores/OrgaoExercicio-ListaServidores.asp?CodOrg=17000&Pagina=#{page_number}"
   raw_html = open(url).read
   html = Nokogiri::HTML(raw_html)
 
-  html.search("#listagem table td:nth-child(2) a").each do |servidor|
-    name = servidor.text.strip
-    path = servidor.attr("href")
-    url_s = "http://www.portaltransparencia.gov.br/servidores/#{path}"
+  html.search("#listagem table td:nth-child(2) a").each do |server|
+    name = server.text.strip
+    path = server.attr("href")
+    server_url = "http://www.portaltransparencia.gov.br/servidores/#{path}"
 
-    raw_html = open(url_s).read
+    raw_html = open(server_url).read
     html = Nokogiri::HTML(raw_html)
 
-    cargo = html.search("#listagemConvenios tr td:nth-child(2)")[28]
+    position = html.search("#listagemConvenios tr td:nth-child(2)")[28]
 
-    if cargo && !cargo.text.include?("*")
-      cargo = cargo.text.strip
+    if position && !position.text.include?("*")
+      position = position.text.strip
     else
-      cargo = html.search("#listagemConvenios tr td:nth-child(2)")[1].text.strip
+      position = html.search("#listagemConvenios tr td:nth-child(2)")[1].text.strip
 
-      if cargo == ""
-        descricao = html.search("#listagemConvenios tr td:nth-child(2)")[2]
-        atividade = html.search("#listagemConvenios tr td:nth-child(2)")[3]
-        cargo = "#{descricao.text.strip} - #{atividade.text.strip}"
+      if position == ""
+        description = html.search("#listagemConvenios tr td:nth-child(2)")[2]
+        activity = html.search("#listagemConvenios tr td:nth-child(2)")[3]
+        position = "#{description.text.strip} - #{activity.text.strip}"
       end
     end
 
-    link_da_remuneracao = html.search("#resumo a")[0]
-    path = link_da_remuneracao.attr("href")
+    go_to_remuneration = html.search("#resumo a")[0]
+    path = go_to_remuneration.attr("href")
 
     url = "http://www.portaltransparencia.gov.br#{path}"
     raw_html = open(url).read
     html = Nokogiri::HTML(raw_html)
 
-    salario_b = html.search("#listagemConvenios tbody tr:nth-child(5) .colunaValor")
+    gross_salary_element = html.search("#listagemConvenios tbody tr:nth-child(5) .colunaValor")
 
-    salario_l = html.search(".remuneracaolinhatotalliquida .colunaValor")[0]
+    net_salary_element = html.search(".remuneracaolinhatotalliquida .colunaValor")[0]
 
-    print "="
+    print "."
 
-    if salario_l
-      servidores << { name: name, job: cargo, salary_b: salario_b.text, salary_l: salario_l.text, link: url_s  }
+    if net_salary_element
+      server = {
+        name: name,
+        job: position,
+        gross_salary: gross_salary_element.text,
+        net_salary: net_salary_element.text,
+        link: server_url
+      }
+
+      servers << server
     else
-      servidores_sem_salario << { name: name, job: cargo, link: url_s }
+      wages_not_found << { name: name, job: position, link: server_url }
     end
   end
 
-  File.open(filepath, 'wb') do |file|
-    file.write(JSON.generate(servidores))
+  File.open(servers_path, "wb") do |file|
+    file.write(JSON.generate(servers))
   end
 
-  File.open(filepath2, 'wb') do |file|
-    file.write(JSON.generate(servidores_sem_salario))
+  File.open(without_wages_path, "wb") do |file|
+    file.write(JSON.generate(wages_not_found))
   end
 
 end
