@@ -5,9 +5,9 @@ require 'json'
 class Scrapper
   attr_reader :servants, :wages_not_found, :pages_amount
 
-  BASE_URL = 'https://www.portaltransparencia.gov.br'
-  SERVANTS_ROUTE = '/servidores/'
-  INFO_ID = '#listagemConvenios'
+  BASE_URL = 'https://www.portaltransparencia.gov.br'.freeze
+  SERVANTS_ROUTE = '/servidores/'.freeze
+  INFO_ID = '#listagemConvenios'.freeze
 
   def initialize(pages_amount)
     @pages_amount = pages_amount
