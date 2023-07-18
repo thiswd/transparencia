@@ -58,8 +58,6 @@ class Scrapper
     gross_salary_element = html.search("#{INFO_ID} tbody tr:nth-child(5) .colunaValor")
     net_salary_element = html.search(".remuneracaolinhatotalliquida .colunaValor")[0]
 
-    print "."
-
     if net_salary_element
       servant = {
         name: name,
@@ -73,6 +71,8 @@ class Scrapper
     else
       wages_not_found << { name: name, job: position, link: servant_url }
     end
+
+    print "."
   end
 
   def write_to_file(path, content)
